@@ -8,21 +8,17 @@ import { formatDistanceToNow } from "date-fns";
 
 const createDate = formatDistanceToNow(new Date());
 
-const TaskList = () => {
-  return (
-    <ul className="todo-list">
-      <li className="completed">
-        <Task label="Completed task" createdTime="created 17 seconds ago" />
-      </li>
-      <li className="editing">
-        <Task label="Editing task" createdTime="created 5 minutes ago" />
+const TaskList = ({ todos }) => {
+  const elements = todos.map((item) => {
+    const { classList, id, editing, ...itemProps } = item;
+    return (
+      <li key={id} className={classList}>
+        <Task {...itemProps} />
         <input type="text" className="edit" defaultValue="Editing task" />
       </li>
-      <li>
-        <Task label="Active task" createdTime="created 5 minutes ago" />
-      </li>
-    </ul>
-  );
+    );
+  });
+  return <ul className="todo-list">{elements}</ul>;
 };
 
 export default TaskList;
