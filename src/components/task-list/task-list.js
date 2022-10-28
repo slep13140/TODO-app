@@ -10,11 +10,11 @@ const createDate = formatDistanceToNow(new Date());
 
 export default class TaskList extends Component {
   render() {
-    const { todos } = this.props;
+    const { todos, onDeleted } = this.props;
 
     const elements = todos.map((item) => {
       const { id, ...itemProps } = item;
-      return <Task {...itemProps} key={id} />;
+      return <Task {...itemProps} key={id} onDeleted={() => onDeleted(id)} />;
     });
     return <ul className="todo-list">{elements}</ul>;
   }
