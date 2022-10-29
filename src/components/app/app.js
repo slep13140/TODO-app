@@ -7,6 +7,7 @@ import NewTaskForm from "../new-task-form";
 import "./app.css";
 
 export default class App extends Component {
+  maxId = 10;
   state = {
     todoData: [
       {
@@ -32,10 +33,23 @@ export default class App extends Component {
   deleteTask = (id) => {
     this.setState(({ todoData }) => {
       const idx = todoData.findIndex((el) => el.id === id);
-      console.log(idx);
       const newArr = [...todoData.slice(0, idx), ...todoData.slice(idx + 1)];
       return {
         todoData: newArr,
+      };
+    });
+  };
+  addTask = (text) => {
+    const newTask = {
+      description: text,
+      created: "created 5 minutes ago",
+      classList: null,
+      id: this.maxId++,
+    };
+    this.setState(({ todoData }) => {
+      const newArray = [...todoData, newTask];
+      return {
+        todoData: newArray,
       };
     });
   };
@@ -45,7 +59,7 @@ export default class App extends Component {
       <section className="todoapp">
         <header className="header">
           <h1>todos</h1>
-          <NewTaskForm />
+          <NewTaskForm onTaskAdded={this.addTask} />
         </header>
         <section className="main">
           <TaskList todos={todoData} onDeleted={this.deleteTask} />
