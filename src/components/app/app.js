@@ -126,6 +126,16 @@ export default class App extends Component {
       });
     }
   };
+  onClearCompleted = () => {
+    this.setState(({ todoData }) => {
+      const newArr = JSON.parse(JSON.stringify(todoData)).filter(
+        (item) => !item.completed
+      );
+      return {
+        todoData: newArr,
+      };
+    });
+  };
 
   render() {
     const { todoData, filtersData } = this.state;
@@ -145,6 +155,7 @@ export default class App extends Component {
             filters={filtersData}
             onToggleSelected={this.onToggleSelected}
             onFilterCompleted={this.onFilterCompleted}
+            onClearCompleted={this.onClearCompleted}
           />
         </section>
       </section>
