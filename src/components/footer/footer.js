@@ -9,6 +9,7 @@ const Footer = ({
   onToggleSelected,
   onFilterCompleted,
   onClearCompleted,
+  toDo,
 }) => {
   const elements = filters.map((item) => {
     const { id, value, ...itemProps } = item;
@@ -27,7 +28,7 @@ const Footer = ({
   });
   return (
     <footer className="footer">
-      <span className="todo-count">1 items left</span>
+      <span className="todo-count">{toDo} items left</span>
       <ul className="filters">{elements}</ul>
       <button className="clear-completed" onClick={onClearCompleted}>
         Clear completed

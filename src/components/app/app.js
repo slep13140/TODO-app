@@ -139,6 +139,9 @@ export default class App extends Component {
 
   render() {
     const { todoData, filtersData } = this.state;
+    const activeCount =
+      this.state.todoData.length -
+      this.state.todoData.filter((el) => el.completed).length;
     return (
       <section className="todoapp">
         <header className="header">
@@ -152,6 +155,7 @@ export default class App extends Component {
             onToggleCompleted={this.onToggleCompleted}
           />
           <Footer
+            toDo={activeCount}
             filters={filtersData}
             onToggleSelected={this.onToggleSelected}
             onFilterCompleted={this.onFilterCompleted}
