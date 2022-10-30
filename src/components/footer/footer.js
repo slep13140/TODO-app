@@ -4,11 +4,26 @@ import TaskFilter from "../task-filter";
 
 import "./footer.css";
 
-const Footer = () => {
+const Footer = ({ filters, onToggleSelected, onFilterCompleted }) => {
+  const elements = filters.map((item) => {
+    const { id, value, ...itemProps } = item;
+
+    return (
+      <TaskFilter
+        key={id}
+        value={value}
+        {...itemProps}
+        onToggleSelected={() => {
+          onToggleSelected(id);
+          onFilterCompleted(value);
+        }}
+      />
+    );
+  });
   return (
     <footer className="footer">
       <span className="todo-count">1 items left</span>
-      <TaskFilter />
+      <ul className="filters">{elements}</ul>
       <button className="clear-completed">Clear completed</button>
     </footer>
   );

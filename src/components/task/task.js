@@ -3,28 +3,37 @@ import React, { Component } from "react";
 import "./task.css";
 
 export default class Task extends Component {
-  state = {
-    completed: false,
-  };
-
-  onTaskCompleted = () => {
-    this.setState(({ completed }) => {
-      return { completed: !completed };
-    });
-  };
   render() {
-    const { description, created, onDeleted } = this.props;
-    const { completed } = this.state;
+    const {
+      description,
+      created,
+      onDeleted,
+      onToggleCompleted,
+      completed,
+      checked,
+      filterCompleted,
+    } = this.props;
+
     let classNames = "";
     if (completed) {
       classNames += "completed";
     }
+    if (filterCompleted && completed) {
+      classNames += " filterCompleted";
+    } else if (filterCompleted && !completed) {
+      classNames += "filterCompleted";
+    }
     return (
       <li className={classNames}>
         <div className="view">
-          <input className="toggle" type="checkbox" />
+          <input
+            className="toggle"
+            type="checkbox"
+            checked={checked}
+            onChange={onToggleCompleted}
+          />
           <label>
-            <span className="description" onClick={this.onTaskCompleted}>
+            <span className="description" onClick={onToggleCompleted}>
               {description}
             </span>
             <span className="created">{created}</span>

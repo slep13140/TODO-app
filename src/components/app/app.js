@@ -10,26 +10,26 @@ export default class App extends Component {
   maxId = 10;
   state = {
     todoData: [
-      {
-        description: "Completed task",
-        created: "created 17 seconds ago",
-        classList: "completed",
-        id: 1,
-      },
-      {
-        description: "Editing task",
-        created: "created 5 minutes ago",
-        classList: "editing",
-        id: 2,
-      },
-      {
-        description: "Active task",
-        created: "created 5 minutes ago",
-        classList: null,
-        id: 3,
-      },
+      this.createNewTask("Completed task", "created 17 seconds ago"),
+      this.createNewTask("Editing task"),
+      this.createNewTask("Active task"),
+    ],
+    filtersData: [
+      { selected: true, value: "All", id: 1 },
+      { selected: false, value: "Active", id: 2 },
+      { selected: false, value: "Completed", id: 3 },
     ],
   };
+  createNewTask(description, created = "created 5 minutes ago") {
+    return {
+      description,
+      created,
+      completed: false,
+      checked: false,
+      filterCompleted: false,
+      id: this.maxId++,
+    };
+  }
   deleteTask = (id) => {
     this.setState(({ todoData }) => {
       const idx = todoData.findIndex((el) => el.id === id);
@@ -40,12 +40,7 @@ export default class App extends Component {
     });
   };
   addTask = (text) => {
-    const newTask = {
-      description: text,
-      created: "created 5 minutes ago",
-      classList: null,
-      id: this.maxId++,
-    };
+    const newTask = this.createNewTask(text);
     this.setState(({ todoData }) => {
       const newArray = [...todoData, newTask];
       return {
@@ -53,8 +48,87 @@ export default class App extends Component {
       };
     });
   };
+  onToggleCompleted = (id) => {
+    this.setState(({ todoData }) => {
+      const idx = todoData.findIndex((el) => el.id === id);
+      const oldItem = todoData[idx];
+      const newItem = {
+        ...oldItem,
+        completed: !oldItem.completed,
+        checked: !oldItem.checked,
+      };
+      const newArr = [
+        ...todoData.slice(0, idx),
+        newItem,
+        ...todoData.slice(idx + 1),
+      ];
+      return {
+        todoData: newArr,
+      };
+    });
+  };
+  onToggleSelected = (id) => {
+    this.setState(({ filtersData }) => {
+      const idx = filtersData.findIndex((el) => el.id === id);
+      const newArr = JSON.parse(JSON.stringify(filtersData)).map((item) => {
+        if (item.value !== filtersData[idx].value) {
+          item.selected = false;
+        } else if (filtersData[idx].selected === true) {
+          item.selected = true;
+        } else {
+          item.selected = !item.selected;
+        }
+        return item;
+      });
+      return {
+        filtersData: newArr,
+      };
+    });
+  };
+  onFilterCompleted = (value) => {
+    if (value === "Active") {
+      this.setState(({ todoData }) => {
+        const newArr = JSON.parse(JSON.stringify(todoData)).map((item) => {
+          if (item.checked) {
+            item.filterCompleted = true;
+          } else {
+            item.filterCompleted = false;
+          }
+          return item;
+        });
+        return {
+          todoData: newArr,
+        };
+      });
+    } else if (value === "Completed") {
+      this.setState(({ todoData }) => {
+        const newArr = JSON.parse(JSON.stringify(todoData)).map((item) => {
+          if (!item.checked) {
+            item.filterCompleted = true;
+          } else {
+            item.filterCompleted = false;
+          }
+          return item;
+        });
+        return {
+          todoData: newArr,
+        };
+      });
+    } else if (value === "All") {
+      this.setState(({ todoData }) => {
+        const newArr = JSON.parse(JSON.stringify(todoData)).map((item) => {
+          item.filterCompleted = false;
+          return item;
+        });
+        return {
+          todoData: newArr,
+        };
+      });
+    }
+  };
+
   render() {
-    const { todoData } = this.state;
+    const { todoData, filtersData } = this.state;
     return (
       <section className="todoapp">
         <header className="header">
@@ -62,8 +136,16 @@ export default class App extends Component {
           <NewTaskForm onTaskAdded={this.addTask} />
         </header>
         <section className="main">
-          <TaskList todos={todoData} onDeleted={this.deleteTask} />
-          <Footer />
+          <TaskList
+            todos={todoData}
+            onDeleted={this.deleteTask}
+            onToggleCompleted={this.onToggleCompleted}
+          />
+          <Footer
+            filters={filtersData}
+            onToggleSelected={this.onToggleSelected}
+            onFilterCompleted={this.onFilterCompleted}
+          />
         </section>
       </section>
     );
