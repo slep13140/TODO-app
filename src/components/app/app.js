@@ -10,7 +10,7 @@ export default class App extends Component {
   maxId = 10;
   state = {
     todoData: [
-      this.createNewTask("Completed task", "created 17 seconds ago"),
+      this.createNewTask("Completed task"),
       this.createNewTask("Editing task"),
       this.createNewTask("Active task"),
     ],
@@ -19,14 +19,19 @@ export default class App extends Component {
       { selected: false, value: "Active", id: 2 },
       { selected: false, value: "Completed", id: 3 },
     ],
+    currentDate: new Date(),
   };
-  createNewTask(description, created = "created 5 minutes ago") {
+
+  createNewTask(description) {
+    const date = new Date();
+
     return {
       description,
-      created,
+      // created: "1",
       completed: false,
       checked: false,
       filterCompleted: false,
+      createdDate: date,
       id: this.maxId++,
     };
   }
@@ -57,6 +62,12 @@ export default class App extends Component {
         completed: !oldItem.completed,
         checked: !oldItem.checked,
       };
+      if (this.state.filtersData[1].selected === true) {
+        newItem.filterCompleted = true;
+      }
+      if (this.state.filtersData[2].selected === true) {
+        newItem.filterCompleted = true;
+      }
       const newArr = [
         ...todoData.slice(0, idx),
         newItem,
@@ -89,6 +100,7 @@ export default class App extends Component {
     if (value === "Active") {
       this.setState(({ todoData }) => {
         const newArr = JSON.parse(JSON.stringify(todoData)).map((item) => {
+          item.createdDate = new Date(item.createdDate);
           if (item.checked) {
             item.filterCompleted = true;
           } else {
@@ -96,6 +108,7 @@ export default class App extends Component {
           }
           return item;
         });
+
         return {
           todoData: newArr,
         };
@@ -103,6 +116,7 @@ export default class App extends Component {
     } else if (value === "Completed") {
       this.setState(({ todoData }) => {
         const newArr = JSON.parse(JSON.stringify(todoData)).map((item) => {
+          item.createdDate = new Date(item.createdDate);
           if (!item.checked) {
             item.filterCompleted = true;
           } else {
@@ -117,6 +131,7 @@ export default class App extends Component {
     } else if (value === "All") {
       this.setState(({ todoData }) => {
         const newArr = JSON.parse(JSON.stringify(todoData)).map((item) => {
+          item.createdDate = new Date(item.createdDate);
           item.filterCompleted = false;
           return item;
         });
@@ -128,20 +143,38 @@ export default class App extends Component {
   };
   onClearCompleted = () => {
     this.setState(({ todoData }) => {
-      const newArr = JSON.parse(JSON.stringify(todoData)).filter(
-        (item) => !item.completed
-      );
+      const newArr = JSON.parse(JSON.stringify(todoData)).filter((item) => {
+        if (!item.completed) {
+          item.createdDate = new Date(item.createdDate);
+          return item;
+        }
+        return false;
+      });
       return {
         todoData: newArr,
       };
     });
   };
 
+  componentDidMount() {
+    this.timerID = setInterval(() => this.tick(), 3000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
+
+  tick() {
+    this.setState({ currentDate: new Date() });
+  }
+
   render() {
     const { todoData, filtersData } = this.state;
     const activeCount =
       this.state.todoData.length -
       this.state.todoData.filter((el) => el.completed).length;
+    const created = this.state.currentDate;
+
     return (
       <section className="todoapp">
         <header className="header">
@@ -151,6 +184,7 @@ export default class App extends Component {
         <section className="main">
           <TaskList
             todos={todoData}
+            currentDate={created}
             onDeleted={this.deleteTask}
             onToggleCompleted={this.onToggleCompleted}
           />

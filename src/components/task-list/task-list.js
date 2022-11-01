@@ -2,21 +2,22 @@ import React, { Component } from "react";
 
 import Task from "../task";
 
-import "./task-list.css";
-
 import { formatDistanceToNow } from "date-fns";
 
-const createDate = formatDistanceToNow(new Date());
+import "./task-list.css";
 
 export default class TaskList extends Component {
   render() {
-    const { todos, onDeleted, onToggleCompleted } = this.props;
+    const { todos, onDeleted, onToggleCompleted, currentDate } = this.props;
 
     const elements = todos.map((item) => {
-      const { id, ...itemProps } = item;
+      const { id, createdDate, ...itemProps } = item;
+      const created = formatDistanceToNow(createdDate, currentDate);
+
       return (
         <Task
           {...itemProps}
+          created={created}
           key={id}
           onDeleted={() => onDeleted(id)}
           onToggleCompleted={() => onToggleCompleted(id)}

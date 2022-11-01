@@ -36,7 +36,7 @@ export default class Task extends Component {
             <span className="description" onClick={onToggleCompleted}>
               {description}
             </span>
-            <span className="created">{created}</span>
+            <span className="created">created {created} ago</span>
           </label>
           <button className="icon icon-edit"></button>
           <button className="icon icon-destroy" onClick={onDeleted}></button>

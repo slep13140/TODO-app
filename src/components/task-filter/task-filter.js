@@ -4,7 +4,7 @@ import "./task-filter.css";
 
 export default class TaskFilter extends Component {
   render() {
-    const { selected, value, onToggleSelected, filterCompleted } = this.props;
+    const { selected, value, onToggleSelected } = this.props;
     let classNames = "";
     if (selected) {
       classNames += "selected";
