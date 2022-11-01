@@ -7,6 +7,9 @@ import NewTaskForm from "../new-task-form";
 import "./app.css";
 
 export default class App extends Component {
+  static defaultProps = {
+    timeInterval: 30000,
+  };
   maxId = 10;
   state = {
     todoData: [
@@ -27,7 +30,6 @@ export default class App extends Component {
 
     return {
       description,
-      // created: "1",
       completed: false,
       checked: false,
       filterCompleted: false,
@@ -157,7 +159,8 @@ export default class App extends Component {
   };
 
   componentDidMount() {
-    this.timerID = setInterval(() => this.tick(), 3000);
+    const { timeInterval } = this.props;
+    this.timerID = setInterval(() => this.tick(), timeInterval);
   }
 
   componentWillUnmount() {

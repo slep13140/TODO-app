@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import TaskFilter from "../task-filter";
 
@@ -26,6 +27,7 @@ const Footer = ({
       />
     );
   });
+
   return (
     <footer className="footer">
       <span className="todo-count">{toDo} items left</span>
@@ -36,5 +38,10 @@ const Footer = ({
     </footer>
   );
 };
-
+Footer.propTypes = {
+  filters: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onToggleSelected: PropTypes.func.isRequired,
+  onClearCompleted: PropTypes.func.isRequired,
+  toDo: PropTypes.number.isRequired,
+};
 export default Footer;

@@ -1,8 +1,24 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 import "./task.css";
 
 export default class Task extends Component {
+  static defaultProps = {
+    description: "New task",
+    completed: false,
+    checked: false,
+  };
+
+  static propTypes = {
+    description: PropTypes.string,
+    created: PropTypes.string.isRequired,
+    onDeleted: PropTypes.func.isRequired,
+    onToggleCompleted: PropTypes.func.isRequired,
+    completed: PropTypes.bool,
+    checked: PropTypes.bool,
+    filterCompleted: PropTypes.bool.isRequired,
+  };
   render() {
     const {
       description,
