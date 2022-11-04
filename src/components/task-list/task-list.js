@@ -1,39 +1,44 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React from 'react'
+import PropTypes from 'prop-types'
+import { formatDistanceToNow } from 'date-fns'
 
-import Task from "../task";
+import Task from '../task/task'
 
-import { formatDistanceToNow } from "date-fns";
+import './task-list.css'
 
-import "./task-list.css";
+function TaskList(props) {
+  const { todos, onDeleted } = props
+  const { onToggleCompleted, currentDate } = props
 
-export default class TaskList extends Component {
-  static defaultProps = {
-    currentDate: new Date(),
-  };
-  static propTypes = {
-    todos: PropTypes.arrayOf(PropTypes.object).isRequired,
-    onDeleted: PropTypes.func.isRequired,
-    onToggleCompleted: PropTypes.func.isRequired,
-    currentDate: PropTypes.object,
-  };
-  render() {
-    const { todos, onDeleted, onToggleCompleted, currentDate } = this.props;
+  const elements = todos.map((item) => {
+    const { id, createdDate, description } = item
+    const { completed, filterCompleted, checked } = item
+    const created = formatDistanceToNow(createdDate, currentDate)
 
-    const elements = todos.map((item) => {
-      const { id, createdDate, ...itemProps } = item;
-      const created = formatDistanceToNow(createdDate, currentDate);
-
-      return (
-        <Task
-          {...itemProps}
-          created={created}
-          key={id}
-          onDeleted={() => onDeleted(id)}
-          onToggleCompleted={() => onToggleCompleted(id)}
-        />
-      );
-    });
-    return <ul className="todo-list">{elements}</ul>;
-  }
+    return (
+      <Task
+        description={description}
+        completed={completed}
+        filterCompleted={filterCompleted}
+        created={created}
+        checked={checked}
+        keyId={id}
+        key={id}
+        onDeleted={() => onDeleted(id)}
+        onToggleCompleted={() => onToggleCompleted(id)}
+      />
+    )
+  })
+  return <ul className="todo-list">{elements}</ul>
 }
+
+TaskList.defaultProps = {
+  currentDate: new Date(),
+}
+TaskList.propTypes = {
+  todos: PropTypes.arrayOf(PropTypes.shape).isRequired,
+  onDeleted: PropTypes.func.isRequired,
+  onToggleCompleted: PropTypes.func.isRequired,
+  currentDate: PropTypes.instanceOf(Date),
+}
+export default TaskList
