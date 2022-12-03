@@ -20,7 +20,7 @@
 }
 
 .toggle-all + label:before {
-  content: "❯";
+  content: '❯';
   font-size: 22px;
   color: #e6e6e6;
   padding: 10px 27px 10px 27px;
@@ -65,4 +65,31 @@
   .todo-list li .toggle {
     height: 40px;
   }
+}
+.todo-list li label .description-timer {
+  font-size: 13px;
+  color: gray;
+}
+.todo-list li .icon-pause,
+.todo-list li .icon-play {
+  margin: 0;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #cc9a9a;
+  transition: color 0.2s ease-out;
+  cursor: pointer;
+}
+.todo-list li .icon-play {
+  font-size: 15px;
+}
+.icon-pause:after {
+  content: '⏸';
+}
+
+.icon-play:after {
+  content: '▶';
+}
+.timer {
+  margin-left: 5px;
 }

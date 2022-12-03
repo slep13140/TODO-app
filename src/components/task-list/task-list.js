@@ -9,10 +9,12 @@ import './task-list.css'
 function TaskList(props) {
   const { todos, onDeleted } = props
   const { onToggleCompleted, currentDate } = props
+  const { doTimer, doPause } = props
 
   const elements = todos.map((item) => {
     const { id, createdDate, description } = item
     const { completed, filterCompleted, checked } = item
+    const { timer } = item
     const created = formatDistanceToNow(createdDate, currentDate)
 
     return (
@@ -24,8 +26,14 @@ function TaskList(props) {
         checked={checked}
         keyId={id}
         key={id}
+        timer={timer}
         onDeleted={() => onDeleted(id)}
         onToggleCompleted={() => onToggleCompleted(id)}
+        doTimer={() => {
+          const start = Date.now()
+          doTimer(id, start)
+        }}
+        doPause={() => doPause(id)}
       />
     )
   })
@@ -40,5 +48,7 @@ TaskList.propTypes = {
   onDeleted: PropTypes.func.isRequired,
   onToggleCompleted: PropTypes.func.isRequired,
   currentDate: PropTypes.instanceOf(Date),
+  doTimer: PropTypes.func.isRequired,
+  doPause: PropTypes.func.isRequired,
 }
 export default TaskList

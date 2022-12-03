@@ -7,8 +7,10 @@ function Task(props) {
   const { completed, filterCompleted, checked } = props
   const { onToggleCompleted, keyId, description } = props
   const { created, onDeleted } = props
+  const { doTimer, doPause, timer } = props
   const keyLabel = `${keyId} + 'Id'`
   const createTime = `created ${created} ago`
+
   let classNames = ''
   if (completed) {
     classNames += 'completed'
@@ -25,6 +27,11 @@ function Task(props) {
         <label htmlFor={keyLabel}>
           <span className="description" role="presentation" onClick={onToggleCompleted}>
             {description}
+          </span>
+          <span className="description description-timer">
+            <button type="button" className="icon-play" aria-label="play-timer" onClick={doTimer} />
+            <button type="button" className="icon-pause" aria-label="pause-timer" onClick={doPause} />
+            <span className="timer">{timer}</span>
           </span>
           <span className="created">{createTime}</span>
         </label>
@@ -50,5 +57,8 @@ Task.propTypes = {
   completed: PropTypes.bool,
   checked: PropTypes.bool,
   filterCompleted: PropTypes.bool.isRequired,
+  doTimer: PropTypes.func.isRequired,
+  doPause: PropTypes.func.isRequired,
+  timer: PropTypes.string.isRequired,
 }
 export default Task
