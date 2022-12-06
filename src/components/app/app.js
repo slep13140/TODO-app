@@ -313,10 +313,12 @@ export default class App extends Component {
         } else if (typeof item.timerSec === 'string') {
           totalTime += Number(item.timerSec)
         }
-        if (item.startOn) {
+        if (item.startOn && totalTime > 0) {
           totalTime -= 1
           item.timerSec = this.checkTime(totalTime % 60)
           item.timerMin = this.checkTime(Math.floor(totalTime / 60))
+        } else if (totalTime === 0) {
+          item.startOn = false
         }
         return item
       })
