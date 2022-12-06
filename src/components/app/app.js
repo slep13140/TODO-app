@@ -5,6 +5,7 @@ import NewTaskForm from '../new-task-form/new-task-form'
 import Footer from '../footer/footer'
 
 import './app.css'
+// import { number } from 'prop-types'
 
 export default class App extends Component {
   constructor() {
@@ -19,8 +20,24 @@ export default class App extends Component {
       ],
       currentDate: new Date(),
     }
-    this.addTask = (text) => {
+
+    this.addTask = (text, min, sec) => {
+      let timeMin = 0
+      let timeSec = 0
+      if (sec) {
+        timeSec = sec % 60
+        timeMin = Math.floor(sec / 60)
+      }
+      if (min) {
+        timeMin += +min
+      }
       const newTask = this.createNewTask(text)
+      if (timeMin > 0) {
+        newTask.timerMin = this.checkTime(timeMin)
+      }
+      if (timeSec > 0) {
+        newTask.timerSec = this.checkTime(timeSec)
+      }
       this.setState(({ todoData }) => {
         const newArray = [...todoData, newTask]
         return {
@@ -28,6 +45,7 @@ export default class App extends Component {
         }
       })
     }
+
     this.deleteTask = (id) => {
       this.setState(({ todoData }) => {
         const idx = todoData.findIndex((el) => el.id === id)
@@ -37,6 +55,7 @@ export default class App extends Component {
         }
       })
     }
+
     this.onToggleCompleted = (id) => {
       this.setState(({ todoData, filtersData }) => {
         const idx = todoData.findIndex((el) => el.id === id)
@@ -59,6 +78,7 @@ export default class App extends Component {
         }
       })
     }
+
     this.onToggleSelected = (id) => {
       this.setState(({ filtersData }) => {
         const idx = filtersData.findIndex((el) => el.id === id)
@@ -78,6 +98,7 @@ export default class App extends Component {
         }
       })
     }
+
     this.onFilterCompleted = (value) => {
       if (value === 'Active') {
         this.setState(({ todoData }) => {
@@ -126,6 +147,7 @@ export default class App extends Component {
         })
       }
     }
+
     this.onClearCompleted = () => {
       this.setState(({ todoData }) => {
         const newArr = JSON.parse(JSON.stringify(todoData)).filter((el) => !el.completed)
@@ -138,26 +160,57 @@ export default class App extends Component {
         }
       })
     }
-    this.doTimer = (id, time) => {
+
+    this.onEditing = (id) => {
+      this.setState(({ todoData }) => {
+        const idx = todoData.findIndex((el) => el.id === id)
+        const oldItem = todoData[idx]
+        const newItem = {
+          ...oldItem,
+          editing: true,
+        }
+        const newArr = [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)]
+        return {
+          todoData: newArr,
+        }
+      })
+    }
+
+    this.onNewTask = (id, text) => {
+      this.setState(({ todoData }) => {
+        const idx = todoData.findIndex((el) => el.id === id)
+        const oldItem = todoData[idx]
+        const newItem = {
+          ...oldItem,
+          description: text,
+          editing: false,
+        }
+        const newArr = [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)]
+        return {
+          todoData: newArr,
+        }
+      })
+    }
+
+    this.checkTime = (i) => {
+      let t = i
+      if (i < 10) {
+        t = `0${i}`
+      }
+      return t
+    }
+
+    this.doTimer = (id) => {
       this.setState(({ todoData, currentDate }) => {
         const idx = todoData.findIndex((el) => el.id === id)
         const oldItem = todoData[idx]
-        const oldStart = oldItem.startPlay
 
         const newItem = {
           ...oldItem,
           startOn: true,
           pauseOn: false,
         }
-        if (!oldItem.startOn && oldItem.pauseTimer === 0) {
-          newItem.startPlay = time
-        } else {
-          newItem.startPlay = oldStart
-        }
 
-        if (newItem.startOn) {
-          this.taskTimer()
-        }
         if (newItem.pauseTimer > 0 && oldItem.pauseOn) {
           newItem.startPlay = currentDate - oldItem.pauseTimer
         }
@@ -169,26 +222,26 @@ export default class App extends Component {
         }
       })
     }
+
     this.doPause = (id) => {
-      this.setState(({ todoData, currentDate }) => {
+      this.setState(({ todoData }) => {
         const idx = todoData.findIndex((el) => el.id === id)
         const oldItem = todoData[idx]
         const newPauseOn = !oldItem.pauseOn
-        const newTimer = currentDate - oldItem.startPlay
+
         let newItem
         if (newPauseOn && oldItem.startOn) {
           newItem = {
             ...oldItem,
             startOn: false,
             pauseOn: newPauseOn,
-            pauseTimer: newTimer,
           }
         } else if (newPauseOn && !oldItem.startOn) {
           newItem = { ...oldItem }
         } else {
           newItem = {
             ...oldItem,
-            startPlay: currentDate - oldItem.pauseTimer,
+
             startOn: true,
             pauseOn: newPauseOn,
           }
@@ -199,19 +252,12 @@ export default class App extends Component {
         }
       })
     }
-    this.checkTime = (i) => {
-      let t = i
-      if (i < 10) {
-        t = `0${i}`
-      }
-      return t
-    }
+
     this.taskUpdate = this.taskUpdate.bind(this)
   }
 
   componentDidMount() {
-    const { timeInterval } = this.props
-    this.timerID = setInterval(() => this.tick(), timeInterval)
+    this.timerID = setInterval(() => this.tick(), 1000)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -224,7 +270,6 @@ export default class App extends Component {
 
   componentWillUnmount() {
     clearInterval(this.timerID)
-    clearInterval(this.taskTimerID)
   }
 
   createNewTask(description) {
@@ -240,11 +285,11 @@ export default class App extends Component {
       filterCompleted: false,
       createdDate: date,
       id: taskId,
-      timer: '00:00',
-      startPlay: date,
+      editing: false,
+      timerMin: '00',
+      timerSec: '00',
       startOn: false,
       pauseOn: false,
-      pauseTimer: 0,
     }
   }
 
@@ -252,26 +297,29 @@ export default class App extends Component {
     this.setState({ currentDate: new Date() })
   }
 
-  taskTimer() {
-    this.taskTimerID = setInterval(() => this.tick(), 1000)
-  }
-
   taskUpdate() {
-    this.setState(({ todoData, currentDate }) => {
+    let totalTime = 0
+    this.setState(({ todoData }) => {
       const newArr = JSON.parse(JSON.stringify(todoData)).map((index) => {
         const item = { ...index }
         item.createdDate = new Date(item.createdDate)
-        if (item.startOn) {
-          const totalSeconds = Math.floor((currentDate - new Date(item.startPlay)) / 1000)
-          const seconds = totalSeconds % 60
-          const totalMinutes = Math.floor(totalSeconds / 60)
-          const minutes = totalMinutes % 60
-          item.timer = `${this.checkTime(minutes)}:${this.checkTime(seconds)}`
+        if (typeof item.timerMin === 'number') {
+          totalTime += item.timerMin * 60
+        } else if (typeof item.timerMin === 'string') {
+          totalTime += Number(item.timerMin) * 60
         }
-
+        if (typeof item.timerSec === 'number') {
+          totalTime += item.timerSec
+        } else if (typeof item.timerSec === 'string') {
+          totalTime += Number(item.timerSec)
+        }
+        if (item.startOn) {
+          totalTime -= 1
+          item.timerSec = this.checkTime(totalTime % 60)
+          item.timerMin = this.checkTime(Math.floor(totalTime / 60))
+        }
         return item
       })
-
       return {
         todoData: newArr,
       }
@@ -297,6 +345,8 @@ export default class App extends Component {
             onToggleCompleted={this.onToggleCompleted}
             doTimer={this.doTimer}
             doPause={this.doPause}
+            onEditing={this.onEditing}
+            onNewTask={this.onNewTask}
           />
           <Footer
             toDo={activeCount}
