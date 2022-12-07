@@ -5,9 +5,9 @@
   "scripts": {
     "build": "react-scripts build",
     "eject": "react-scripts eject",
-    "format": "prettier  --write src/**/*.js",
-    "lint": "eslint ./src",
-    "lint:fix": "eslint ./src --fix",
+    "format": "prettier  --write src/**/*.jsx",
+    "lint": "eslint src/**/*.jsx",
+    "lint:fix": "eslint src/**/*.jsx --fix",
     "prepare": "husky install",
     "start": "react-scripts start",
     "test": "react-scripts test"
@@ -16,7 +16,7 @@
     "pre-commit": "lint-staged"
   },
   "lint-staged": {
-    "*.js": [
+    "*.jsx": [
       "npm run lint",
       "npm run lint:fix",
       "npm run format"
