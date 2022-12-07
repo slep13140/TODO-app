@@ -2,9 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { formatDistanceToNow } from 'date-fns'
 
-import Task from '../task/task'
+import Task from '../Task/Task'
 
-import './task-list.css'
+import './TaskList.css'
 
 function TaskList(props) {
   const { todos, onDeleted, onEditing } = props

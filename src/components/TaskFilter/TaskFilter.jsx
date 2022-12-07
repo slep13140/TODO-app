@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import './task-filter.css'
+import './TaskFilter.css'
 
 function TaskFilter({ selected, value, onToggleSelected }) {
   let classNames = ''
@@ -11,7 +11,7 @@ function TaskFilter({ selected, value, onToggleSelected }) {
 
   return (
     <li>
-      <button type="button" className={classNames} onClick={onToggleSelected}>
+      <button type="button" className={classNames} onClick={onToggleSelected} aria-label={value}>
         {value}
       </button>
     </li>

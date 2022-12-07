@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import './task.css'
+import './Task.css'
 
 export default class Task extends Component {
   constructor() {
@@ -60,29 +60,56 @@ export default class Task extends Component {
     return (
       <li className={classNames}>
         <div className="view">
-          <input className="toggle" type="checkbox" checked={checked} onChange={onToggleCompleted} />
+          <input className="toggle" id={keyLabel} type="checkbox" checked={checked} onChange={onToggleCompleted} />
           <label htmlFor={keyLabel}>
             <span className="description" role="presentation" onClick={onToggleCompleted}>
               {description}
             </span>
             <span className="description description-timer">
-              <button type="button" className="icon-play" aria-label="play-timer" onClick={doTimer} />
-              <button type="button" className="icon-pause" aria-label="pause-timer" onClick={doPause} />
+              <button
+                type="button"
+                className="icon-play"
+                aria-label="play-timer"
+                title="play timer"
+                onClick={doTimer}
+              />
+              <button
+                type="button"
+                className="icon-pause"
+                aria-label="pause-timer"
+                title="pause timer"
+                onClick={doPause}
+              />
               <span className="timer">{timer}</span>
             </span>
             <span className="created">{createTime}</span>
           </label>
-          <button type="button" className="icon icon-edit" aria-label="icon-edit" onClick={onEditing} />
-          <button type="button" className="icon icon-destroy" aria-label="icon-destroy" onClick={onDeleted} />
+          <button
+            type="button"
+            className="icon icon-edit"
+            aria-label="icon-edit"
+            title="editing task"
+            onClick={onEditing}
+          />
+          <button
+            type="button"
+            className="icon icon-destroy"
+            aria-label="icon-destroy"
+            title="destroy task"
+            onClick={onDeleted}
+          />
         </div>
-        <input
-          type="text"
-          className="edit"
-          onChange={this.onTaskChange}
-          onKeyPress={this.onSubmit}
-          value={editingTask}
-          ref={this.inputRef}
-        />
+        <label htmlFor="edit" className="editLabel">
+          <input
+            type="text"
+            id="edit"
+            className="edit"
+            onChange={this.onTaskChange}
+            onKeyPress={this.onSubmit}
+            value={editingTask}
+            ref={this.inputRef}
+          />
+        </label>
       </li>
     )
   }

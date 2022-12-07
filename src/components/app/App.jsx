@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 
-import TaskList from '../task-list/task-list'
-import NewTaskForm from '../new-task-form/new-task-form'
-import Footer from '../footer/footer'
+import TaskList from '../TaskList/TaskList'
+import NewTaskForm from '../NewTaskForm/NewTaskForm'
+import Footer from '../Footer/Footer'
 
-import './app.css'
+import './App.css'
 // import { number } from 'prop-types'
 
 export default class App extends Component {

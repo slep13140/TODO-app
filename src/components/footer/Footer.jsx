@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import TaskFilter from '../task-filter/task-filter'
+import TaskFilter from '../TaskFilter/TaskFilter'
 
-import './footer.css'
+import './Footer.css'
 
 function Footer(props) {
   const { filters, onToggleSelected, toDo } = props
@@ -29,7 +29,7 @@ function Footer(props) {
     <footer className="footer">
       <span className="todo-count">{leftItems}</span>
       <ul className="filters">{elements}</ul>
-      <button type="button" className="clear-completed" onClick={onClearCompleted}>
+      <button type="button" className="clear-completed" onClick={onClearCompleted} aria-label="Clear completed">
         Clear completed
       </button>
     </footer>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import './new-task-form.css'
+import './NewTaskForm.css'
 
 class NewTaskForm extends Component {
   constructor() {
@@ -47,27 +47,33 @@ class NewTaskForm extends Component {
     const { labelTask, timerMin, timerSec } = this.state
     return (
       <form className="new-todo-form">
-        <input
-          className="new-todo"
-          placeholder="Task"
-          onChange={this.onLabelChange}
-          onKeyPress={this.onSubmit}
-          value={labelTask}
-        />
-        <input
-          className="new-todo-form__timer timerMin"
-          placeholder="Min"
-          onChange={this.onLabelChange}
-          onKeyPress={this.onSubmit}
-          value={timerMin}
-        />
-        <input
-          className="new-todo-form__timer timerSec"
-          placeholder="Sec"
-          onChange={this.onLabelChange}
-          onKeyPress={this.onSubmit}
-          value={timerSec}
-        />
+        <label htmlFor="task">
+          <input
+            className="new-todo"
+            placeholder="Task"
+            onChange={this.onLabelChange}
+            onKeyPress={this.onSubmit}
+            value={labelTask}
+          />
+        </label>
+        <label htmlFor="min">
+          <input
+            className="new-todo-form__timer timerMin"
+            placeholder="Min"
+            onChange={this.onLabelChange}
+            onKeyPress={this.onSubmit}
+            value={timerMin}
+          />
+        </label>
+        <label htmlFor="sec">
+          <input
+            className="new-todo-form__timer timerSec"
+            placeholder="Sec"
+            onChange={this.onLabelChange}
+            onKeyPress={this.onSubmit}
+            value={timerSec}
+          />
+        </label>
       </form>
     )
   }
