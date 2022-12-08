@@ -5,7 +5,6 @@ import NewTaskForm from '../NewTaskForm/NewTaskForm'
 import Footer from '../Footer/Footer'
 
 import './App.css'
-// import { number } from 'prop-types'
 
 export default class App extends Component {
   constructor() {
